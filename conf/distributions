@@ -1,0 +1,7 @@
+Origin: upstream-mirror
+Label: upstream-mirror
+Codename: stable
+Architectures: amd64 arm64
+Components: main
+Description: Upstream builds of uv, bun, lazygit, lazydocker, lazyjira, just, kitty, mitmproxy, ruff
+SignWith: yes
