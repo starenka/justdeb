@@ -12,15 +12,15 @@ Latest upstream `uv`, `bun`, `lazygit`, `lazydocker`, `lazyjira`, `just`, `kitty
 ```
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://starenka.github.io/justdeb/key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/starenka-justdeb.gpg
-echo "deb [signed-by=/etc/apt/keyrings/upstream-mirror.gpg] https://starenka.github.io/justdeb stable main" | sudo tee /etc/apt/sources.list.d/upstream-mirror.list
+echo "deb [signed-by=/etc/apt/keyrings/sta-justdeb.gpg] https://starenka.github.io/justdeb stable main" | sudo tee /etc/apt/sources.list.d/sta-justdeb.list
 sudo apt update && sudo apt install uv bun lazygit lazydocker lazyjira just kitty mitmproxy ruff deno prek
 ```
 
 Pin the mirrored tools to this repo, so Debian's own (older, or higher-sorting) packages never replace them:
 ```
-sudo tee /etc/apt/preferences.d/upstream-mirror <<'EOF'
+sudo tee /etc/apt/preferences.d/sta-justdeb <<'EOF'
 Package: uv bun lazygit lazydocker lazyjira just ruff deno prek
-Pin: release o=upstream-mirror
+Pin: release o=sta-justdeb
 Pin-Priority: 900
 EOF
 ```

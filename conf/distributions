@@ -1,5 +1,5 @@
-Origin: upstream-mirror
-Label: upstream-mirror
+Origin: sta-justdeb
+Label: sta-justdeb
 Codename: stable
 Architectures: amd64 arm64
 Components: main
