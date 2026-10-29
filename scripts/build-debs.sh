@@ -78,11 +78,14 @@ declare -A RUFF=([amd64]=x86_64 [arm64]=aarch64)
 declare -A MITM=([amd64]=x86_64 [arm64]=aarch64)
 declare -A KITTY=([amd64]=x86_64 [arm64]=arm64)
 declare -A LJ=([amd64]=amd64 [arm64]=arm64)
+declare -A DENO=([amd64]=x86_64 [arm64]=aarch64)
+declare -A PREK=([amd64]=x86_64 [arm64]=aarch64)
 
 uvt=$(latest astral-sh/uv); buntag=$(latest oven-sh/bun)
 lgt=$(latest jesseduffield/lazygit); ldt=$(latest jesseduffield/lazydocker)
 justt=$(latest casey/just); ruffv=$(latest astral-sh/ruff); mitmt=$(latest mitmproxy/mitmproxy)
 kitt=$(latest kovidgoyal/kitty); ljt=$(latest textfuel/lazyjira)
+denot=$(latest denoland/deno); prekt=$(latest j178/prek)
 
 for arch in amd64 arm64; do
   d=$WORK/uv-$arch
@@ -128,4 +131,14 @@ for arch in amd64 arm64; do
   fetch "https://github.com/textfuel/lazyjira/releases/download/$ljt/lazyjira_linux_${LJ[$arch]}.tar.gz" "$d"
   mkdeb lazyjira "${ljt#v}" "$arch" "Terminal UI for Jira" \
     https://github.com/textfuel/lazyjira "$(findbin "$d" lazyjira)"
+
+  d=$WORK/deno-$arch
+  fetch "https://github.com/denoland/deno/releases/download/$denot/deno-${DENO[$arch]}-unknown-linux-gnu.zip" "$d"
+  mkdeb deno "${denot#v}" "$arch" "Secure runtime for JavaScript and TypeScript" \
+    https://deno.com "$(findbin "$d" deno)"
+
+  d=$WORK/prek-$arch
+  fetch "https://github.com/j178/prek/releases/download/$prekt/prek-${PREK[$arch]}-unknown-linux-musl.tar.gz" "$d"
+  mkdeb prek "${prekt#v}" "$arch" "Fast, drop-in pre-commit replacement written in Rust" \
+    https://github.com/j178/prek "$(findbin "$d" prek)"
 done

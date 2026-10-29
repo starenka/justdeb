@@ -1,6 +1,6 @@
 # justdeb: upstream APT mirror
 
-Latest upstream `uv`, `bun`, `lazygit`, `lazydocker`, `lazyjira`, `just`, `kitty`, `mitmproxy`, `ruff` as `.deb` (amd64, arm64), rebuilt daily and served from GitHub Pages. Binaries are static, so any Debian release works.
+Latest upstream `uv`, `bun`, `lazygit`, `lazydocker`, `lazyjira`, `just`, `kitty`, `mitmproxy`, `ruff`, `deno`, `prek` as `.deb` (amd64, arm64), rebuilt daily and served from GitHub Pages. Binaries are static, so any Debian release works.
 
 ## Setup (once)
 1. `gpg --quick-gen-key "APT mirror" default default never` (no passphrase)
@@ -13,13 +13,13 @@ Latest upstream `uv`, `bun`, `lazygit`, `lazydocker`, `lazyjira`, `just`, `kitty
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://starenka.github.io/justdeb/key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/starenka-justdeb.gpg
 echo "deb [signed-by=/etc/apt/keyrings/upstream-mirror.gpg] https://starenka.github.io/justdeb stable main" | sudo tee /etc/apt/sources.list.d/upstream-mirror.list
-sudo apt update && sudo apt install uv bun lazygit lazydocker lazyjira just kitty mitmproxy ruff
+sudo apt update && sudo apt install uv bun lazygit lazydocker lazyjira just kitty mitmproxy ruff deno prek
 ```
 
 Pin the mirrored tools to this repo, so Debian's own (older, or higher-sorting) packages never replace them:
 ```
 sudo tee /etc/apt/preferences.d/upstream-mirror <<'EOF'
-Package: uv bun lazygit lazydocker lazyjira just ruff
+Package: uv bun lazygit lazydocker lazyjira just ruff deno prek
 Pin: release o=upstream-mirror
 Pin-Priority: 900
 EOF

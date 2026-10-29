@@ -42,7 +42,7 @@ publish:
 
 # show latest upstream version of every tracked tool
 versions:
-    @for r in astral-sh/uv oven-sh/bun jesseduffield/lazygit jesseduffield/lazydocker textfuel/lazyjira casey/just kovidgoyal/kitty mitmproxy/mitmproxy astral-sh/ruff; do printf '%-28s %s\n' "$r" "$(gh release view -R "$r" --json tagName -q .tagName)"; done
+    @for r in astral-sh/uv oven-sh/bun jesseduffield/lazygit jesseduffield/lazydocker textfuel/lazyjira casey/just kovidgoyal/kitty mitmproxy/mitmproxy astral-sh/ruff denoland/deno j178/prek; do printf '%-28s %s\n' "$r" "$(gh release view -R "$r" --json tagName -q .tagName)"; done
 
 # remove build output
 clean:
