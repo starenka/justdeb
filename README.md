@@ -11,7 +11,7 @@ Latest upstream `uv`, `bun`, `lazygit`, `lazydocker`, `lazyjira`, `just`, `kitty
 ## Client
 ```
 sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://starenka.github.io/justdeb/key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/starenka-justdeb.gpg
+curl -fsSL https://starenka.github.io/justdeb/key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/sta-justdeb.gpg
 echo "deb [signed-by=/etc/apt/keyrings/sta-justdeb.gpg] https://starenka.github.io/justdeb stable main" | sudo tee /etc/apt/sources.list.d/sta-justdeb.list
 sudo apt update && sudo apt install uv bun lazygit lazydocker lazyjira just kitty mitmproxy ruff deno prek
 ```
