@@ -20,6 +20,8 @@ mkdeb() {
 Package: $name
 Version: $ver
 Architecture: $arch
+Section: utils
+Priority: optional
 Maintainer: ${MAINTAINER:-APT mirror <starenka0@gmail.com>}
 Homepage: $home
 Description: $desc
@@ -55,6 +57,8 @@ mkdeb_kitty() {
 Package: kitty
 Version: $ver
 Architecture: $arch
+Section: utils
+Priority: optional
 Maintainer: ${MAINTAINER:-APT mirror <starenka0@gmail.com>}
 Depends: libx11-6, libx11-xcb1, libxcursor1, libxrandr2, libxi6, libxinerama1, libxkbcommon0, libxkbcommon-x11-0, libwayland-client0, libdbus-1-3, libgl1, libfontconfig1
 Homepage: https://sw.kovidgoyal.net/kitty/
