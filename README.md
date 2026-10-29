@@ -11,9 +11,19 @@ Latest upstream `uv`, `bun`, `lazygit`, `lazydocker`, `lazyjira`, `just`, `kitty
 ## Client
 ```
 sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://USER.github.io/REPO/key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/upstream-mirror.gpg
-echo "deb [signed-by=/etc/apt/keyrings/upstream-mirror.gpg] https://USER.github.io/REPO stable main" | sudo tee /etc/apt/sources.list.d/upstream-mirror.list
+curl -fsSL https://starenka.github.io/justdeb/key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/starenka-justdeb.gpg
+echo "deb [signed-by=/etc/apt/keyrings/upstream-mirror.gpg] https://starenka.github.io/justdeb stable main" | sudo tee /etc/apt/sources.list.d/upstream-mirror.list
 sudo apt update && sudo apt install uv bun lazygit lazydocker lazyjira just kitty mitmproxy ruff
 ```
+
+Pin the mirrored tools to this repo, so Debian's own (older, or higher-sorting) packages never replace them:
+```
+sudo tee /etc/apt/preferences.d/upstream-mirror <<'EOF'
+Package: uv bun lazygit lazydocker lazyjira just ruff
+Pin: release o=upstream-mirror
+Pin-Priority: 900
+EOF
+```
+Add `kitty mitmproxy` to the `Package:` line if you want those pinned too.
 
 Only the latest version of each tool is kept. To add a tool, add a block in `scripts/build-debs.sh`.
