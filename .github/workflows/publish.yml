@@ -25,20 +25,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # Scheduled runs only rebuild when an upstream version changed; pushes and manual runs always rebuild.
+      - name: Check upstream versions
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT" = schedule ]; then scripts/check-versions.sh >> "$GITHUB_OUTPUT"
+          else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+          cat "$GITHUB_OUTPUT"
+
       - name: Install tools
+        if: steps.check.outputs.changed == 'true'
         run: sudo apt-get update && sudo apt-get install -y reprepro unzip gnupg
 
       - name: Import GPG key
+        if: steps.check.outputs.changed == 'true'
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
         run: echo "$GPG_PRIVATE_KEY" | gpg --batch --import
 
       - name: Build debs
+        if: steps.check.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: scripts/build-debs.sh
 
       - name: Build repo
+        if: steps.check.outputs.changed == 'true'
         run: |
           mkdir -p site
           reprepro -b site --confdir "$PWD/conf" includedeb stable out/*.deb
@@ -47,8 +62,10 @@ jobs:
           touch site/.nojekyll
 
       - uses: actions/upload-pages-artifact@v3
+        if: steps.check.outputs.changed == 'true'
         with:
           path: site
 
       - id: deploy
+        if: steps.check.outputs.changed == 'true'
         uses: actions/deploy-pages@v4

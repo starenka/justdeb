@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Builds .deb files for the latest upstream releases into ./out
+# With --versions, only prints "PACKAGE VERSION" lines for what would be built.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 OUT=$PWD/out
@@ -86,6 +87,13 @@ lgt=$(latest jesseduffield/lazygit); ldt=$(latest jesseduffield/lazydocker)
 justt=$(latest casey/just); ruffv=$(latest astral-sh/ruff); mitmt=$(latest mitmproxy/mitmproxy)
 kitt=$(latest kovidgoyal/kitty); ljt=$(latest textfuel/lazyjira)
 denot=$(latest denoland/deno); prekt=$(latest j178/prek)
+
+if [[ ${1:-} == --versions ]]; then
+  printf '%s\n' "uv $uvt" "bun ${buntag#bun-v}" "lazygit ${lgt#v}" "lazydocker ${ldt#v}" \
+    "lazyjira ${ljt#v}" "just $justt" "ruff $ruffv" "deno ${denot#v}" "prek ${prekt#v}" \
+    "mitmproxy ${mitmt#v}" "kitty ${kitt#v}" | sort
+  exit 0
+fi
 
 for arch in amd64 arm64; do
   d=$WORK/uv-$arch

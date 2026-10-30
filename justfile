@@ -51,3 +51,7 @@ clean:
 # install the built debs in a clean container and run each binary (default: debian testing, host arch)
 test arch=`dpkg --print-architecture` image="debian:testing": build
     scripts/test-debs.sh {{arch}} {{image}}
+
+# would a scheduled run rebuild? (compares upstream with the published repo)
+check:
+    scripts/check-versions.sh
