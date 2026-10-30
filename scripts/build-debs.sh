@@ -11,12 +11,14 @@ mkdir -p "$OUT"
 latest() { gh release view -R "$1" --json tagName -q .tagName; }
 
 # mkdeb NAME VERSION ARCH DESCRIPTION HOMEPAGE BINARY...
+# Optional SYMLINKS="alias=target ..." in the environment adds /usr/bin symlinks.
 mkdeb() {
   local name=$1 ver=$2 arch=$3 desc=$4 home=$5; shift 5
   local root=$WORK/pkg-$name-$arch
   rm -rf "$root"
   mkdir -p "$root/DEBIAN" "$root/usr/bin"
   for b in "$@"; do install -m755 "$b" "$root/usr/bin/"; done
+  for l in ${SYMLINKS:-}; do ln -s "${l#*=}" "$root/usr/bin/${l%%=*}"; done
   cat > "$root/DEBIAN/control" <<EOF
 Package: $name
 Version: $ver
@@ -103,7 +105,7 @@ for arch in amd64 arm64; do
 
   d=$WORK/bun-$arch
   fetch "https://github.com/oven-sh/bun/releases/download/$buntag/bun-linux-${BUN[$arch]}.zip" "$d"
-  mkdeb bun "${buntag#bun-v}" "$arch" "Fast all-in-one JavaScript runtime and toolkit" \
+  SYMLINKS="bunx=bun" mkdeb bun "${buntag#bun-v}" "$arch" "Fast all-in-one JavaScript runtime and toolkit" \
     https://bun.sh "$(findbin "$d" bun)"
 
   d=$WORK/lazygit-$arch
