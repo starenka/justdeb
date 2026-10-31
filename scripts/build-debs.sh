@@ -89,11 +89,12 @@ lgt=$(latest jesseduffield/lazygit); ldt=$(latest jesseduffield/lazydocker)
 justt=$(latest casey/just); ruffv=$(latest astral-sh/ruff); mitmt=$(latest mitmproxy/mitmproxy)
 kitt=$(latest kovidgoyal/kitty); ljt=$(latest textfuel/lazyjira)
 denot=$(latest denoland/deno); prekt=$(latest j178/prek)
+nict=$(latest nicotine-plus/nicotine-plus)
 
 if [[ ${1:-} == --versions ]]; then
   printf '%s\n' "uv $uvt" "bun ${buntag#bun-v}" "lazygit ${lgt#v}" "lazydocker ${ldt#v}" \
     "lazyjira ${ljt#v}" "just $justt" "ruff $ruffv" "deno ${denot#v}" "prek ${prekt#v}" \
-    "mitmproxy ${mitmt#v}" "kitty ${kitt#v}" | sort
+    "mitmproxy ${mitmt#v}" "kitty ${kitt#v}" "nicotine ${nict#v}-1" | sort
   exit 0
 fi
 
@@ -152,3 +153,10 @@ for arch in amd64 arm64; do
   mkdeb prek "${prekt#v}" "$arch" "Fast, drop-in pre-commit replacement written in Rust" \
     https://github.com/j178/prek "$(findbin "$d" prek)"
 done
+
+# nicotine+: upstream ships an arch:all .deb inside debian-package.zip; republish it as-is
+d=$WORK/nicotine
+fetch "https://github.com/nicotine-plus/nicotine-plus/releases/download/$nict/debian-package.zip" "$d"
+deb=$(findbin "$d" 'nicotine_*_all.deb')
+cp "$deb" "$OUT/"
+echo "copied $(basename "$deb")"

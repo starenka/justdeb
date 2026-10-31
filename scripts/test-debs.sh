@@ -12,11 +12,11 @@ compgen -G "out/*_${arch}.deb" >/dev/null || { echo "no out/*_${arch}.deb; run '
 docker run --rm --platform "linux/$arch" -v "$PWD/out:/debs:ro" "$image" bash -euo pipefail -c '
   export DEBIAN_FRONTEND=noninteractive
   apt-get update -qq
-  apt-get install -y -qq /debs/*_'"$arch"'.deb >/dev/null
+  apt-get install -y -qq /debs/*_'"$arch"'.deb /debs/*_all.deb >/dev/null
   apt-get install -y -qq xvfb xauth libgl1-mesa-dri fonts-dejavu-core >/dev/null
   fail=0
   for cmd in "uv --version" "uvx --version" "bun --version" "bunx --version" "lazygit --version" \
-             "lazydocker --version" "lazyjira --version" "just --version" "ruff --version" "deno --version" "prek --version" \
+             "lazydocker --version" "lazyjira --version" "just --version" "ruff --version" "deno --version" "prek --version" "nicotine --version" \
              "mitmproxy --version" "mitmdump --version" "mitmweb --version" \
              "kitty --version" "kitten --version"; do
     if out=$($cmd 2>&1 | head -n1); then printf "ok    %-22s %s\n" "$cmd" "$out"
