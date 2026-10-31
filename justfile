@@ -12,7 +12,7 @@ build:
 ls:
     @for f in out/*.deb; do dpkg-deb -f "$f" Package Version Architecture | paste -sd' ' | tr -d '\n'; echo "  $(du -h "$f" | cut -f1)"; done
 
-# show contents of one package, e.g. `just inspect kitty`
+# show contents of one package, e.g. `just inspect mitmproxy`
 inspect name:
     @for f in out/{{name}}_*.deb; do echo "== $f"; dpkg-deb -I "$f"; dpkg-deb -c "$f"; done
 
@@ -42,7 +42,7 @@ publish:
 
 # show latest upstream version of every tracked tool
 versions:
-    @for r in astral-sh/uv oven-sh/bun jesseduffield/lazygit jesseduffield/lazydocker textfuel/lazyjira casey/just kovidgoyal/kitty mitmproxy/mitmproxy astral-sh/ruff denoland/deno j178/prek nicotine-plus/nicotine-plus; do printf '%-28s %s\n' "$r" "$(gh release view -R "$r" --json tagName -q .tagName)"; done
+    @for r in astral-sh/uv oven-sh/bun jesseduffield/lazygit jesseduffield/lazydocker textfuel/lazyjira casey/just mitmproxy/mitmproxy astral-sh/ruff denoland/deno j178/prek nicotine-plus/nicotine-plus; do printf '%-28s %s\n' "$r" "$(gh release view -R "$r" --json tagName -q .tagName)"; done
 
 # remove build output
 clean:

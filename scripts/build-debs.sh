@@ -40,35 +40,9 @@ fetch() {
   curl -fsSL "$url" -o "$dest/archive"
   case $url in
     *.zip) unzip -q "$dest/archive" -d "$dest" ;;
-    *.txz) tar -xJf "$dest/archive" -C "$dest" ;;
     *) tar -xzf "$dest/archive" -C "$dest" ;;
   esac
   rm "$dest/archive"
-}
-
-# mkdeb_kitty VERSION ARCH SRCDIR  (bundle goes to /opt/kitty, symlinked into /usr/bin)
-mkdeb_kitty() {
-  local ver=$1 arch=$2 src=$3
-  local root=$WORK/pkg-kitty-$arch
-  rm -rf "$root"
-  mkdir -p "$root/DEBIAN" "$root/opt" "$root/usr/bin" "$root/usr/share"
-  cp -a "$src" "$root/opt/kitty"
-  ln -s ../../opt/kitty/bin/kitty "$root/usr/bin/kitty"
-  ln -s ../../opt/kitty/bin/kitten "$root/usr/bin/kitten"
-  cp -a "$src/share/applications" "$src/share/icons" "$root/usr/share/"
-  cat > "$root/DEBIAN/control" <<EOF
-Package: kitty
-Version: $ver
-Architecture: $arch
-Section: utils
-Priority: optional
-Maintainer: ${MAINTAINER:-APT mirror <starenka0@gmail.com>}
-Depends: libx11-6, libx11-xcb1, libxcursor1, libxrandr2, libxi6, libxinerama1, libxkbcommon0, libxkbcommon-x11-0, libwayland-client0, libdbus-1-3, libgl1, libfontconfig1
-Homepage: https://sw.kovidgoyal.net/kitty/
-Description: Fast, feature-rich, GPU based terminal emulator
-EOF
-  dpkg-deb --root-owner-group --build "$root" "$OUT/kitty_${ver}_${arch}.deb" >/dev/null
-  echo "built kitty_${ver}_${arch}.deb"
 }
 
 findbin() { find "$1" -type f -name "$2" | head -n1; }
@@ -79,7 +53,6 @@ declare -A LG=([amd64]=x86_64 [arm64]=arm64)
 declare -A JUST=([amd64]=x86_64 [arm64]=aarch64)
 declare -A RUFF=([amd64]=x86_64 [arm64]=aarch64)
 declare -A MITM=([amd64]=x86_64 [arm64]=aarch64)
-declare -A KITTY=([amd64]=x86_64 [arm64]=arm64)
 declare -A LJ=([amd64]=amd64 [arm64]=arm64)
 declare -A DENO=([amd64]=x86_64 [arm64]=aarch64)
 declare -A PREK=([amd64]=x86_64 [arm64]=aarch64)
@@ -87,14 +60,14 @@ declare -A PREK=([amd64]=x86_64 [arm64]=aarch64)
 uvt=$(latest astral-sh/uv); buntag=$(latest oven-sh/bun)
 lgt=$(latest jesseduffield/lazygit); ldt=$(latest jesseduffield/lazydocker)
 justt=$(latest casey/just); ruffv=$(latest astral-sh/ruff); mitmt=$(latest mitmproxy/mitmproxy)
-kitt=$(latest kovidgoyal/kitty); ljt=$(latest textfuel/lazyjira)
+ljt=$(latest textfuel/lazyjira)
 denot=$(latest denoland/deno); prekt=$(latest j178/prek)
 nict=$(latest nicotine-plus/nicotine-plus)
 
 if [[ ${1:-} == --versions ]]; then
   printf '%s\n' "uv $uvt" "bun ${buntag#bun-v}" "lazygit ${lgt#v}" "lazydocker ${ldt#v}" \
     "lazyjira ${ljt#v}" "just $justt" "ruff $ruffv" "deno ${denot#v}" "prek ${prekt#v}" \
-    "mitmproxy ${mitmt#v}" "kitty ${kitt#v}" "nicotine ${nict#v}-1" | sort
+    "mitmproxy ${mitmt#v}" "nicotine ${nict#v}-1" | sort
   exit 0
 fi
 
@@ -133,10 +106,6 @@ for arch in amd64 arm64; do
   fetch "https://downloads.mitmproxy.org/${mitmt#v}/mitmproxy-${mitmt#v}-linux-${MITM[$arch]}.tar.gz" "$d"
   mkdeb mitmproxy "${mitmt#v}" "$arch" "Interactive TLS-capable intercepting HTTP proxy" \
     https://mitmproxy.org "$(findbin "$d" mitmproxy)" "$(findbin "$d" mitmdump)" "$(findbin "$d" mitmweb)"
-
-  d=$WORK/kitty-$arch
-  fetch "https://github.com/kovidgoyal/kitty/releases/download/$kitt/kitty-${kitt#v}-${KITTY[$arch]}.txz" "$d"
-  mkdeb_kitty "${kitt#v}" "$arch" "$d"
 
   d=$WORK/lazyjira-$arch
   fetch "https://github.com/textfuel/lazyjira/releases/download/$ljt/lazyjira_linux_${LJ[$arch]}.tar.gz" "$d"

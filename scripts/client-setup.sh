@@ -4,7 +4,7 @@
 set -euo pipefail
 
 URL=https://starenka.github.io/justdeb
-PKGS="uv bun lazygit lazydocker lazyjira just ruff deno prek kitty mitmproxy"
+PKGS="uv bun lazygit lazydocker lazyjira just ruff deno prek nicotine mitmproxy"
 
 # 1. Remove old client config, whatever it was called
 sudo rm -f /etc/apt/keyrings/{upstream-mirror,starenka-justdeb}.gpg \
